@@ -1,8 +1,7 @@
 package com.example.layeredarchitecture.controller;
 
-import com.example.layeredarchitecture.DAO.CustomerDAO;
-import com.example.layeredarchitecture.DAO.CustomerDAOimpl;
-import com.example.layeredarchitecture.db.DBConnection;
+import com.example.layeredarchitecture.DAO.custom.CustomerDAO;
+import com.example.layeredarchitecture.DAO.custom.impl.CustomerDAOimpl;
 import com.example.layeredarchitecture.model.CustomerDTO;
 import com.example.layeredarchitecture.view.tdm.CustomerTM;
 import com.jfoenix.controls.JFXButton;
@@ -79,7 +78,7 @@ public class ManageCustomersFormController {
             while (rst.next()) {
                 tblCustomers.getItems().add(new CustomerTM(rst.getString("id"), rst.getString("name"), rst.getString("address")));*/
            // CustomerDAO customerDAO = new CustomerDAOimpl();
-            ArrayList<CustomerDTO> allCustomers = customerDAO.getAllCustomers();
+            ArrayList<CustomerDTO> allCustomers = customerDAO.getAll();
             for(CustomerDTO c: allCustomers) {
                 tblCustomers.getItems().add(new CustomerTM(c.getId(), c.getName(), c.getAddress()));
             }
@@ -159,7 +158,7 @@ public class ManageCustomersFormController {
                 pstm.executeUpdate();*/
                 //CustomerDAOimpl customerDAO = new CustomerDAOimpl();
                 CustomerDTO customerDTO = new CustomerDTO(id,name,address);
-                boolean isSaved = customerDAO.saveCustomer(customerDTO );
+                boolean isSaved = customerDAO.save(customerDTO );
                 if(isSaved){
                     tblCustomers.getItems().add(new CustomerTM(id, name, address));
                 }
@@ -177,7 +176,7 @@ public class ManageCustomersFormController {
             try {
                 //new CustomerDAOimpl().updateCustomer(new CustomerDTO(id,name,address));
                 CustomerDTO customerDTO = new CustomerDTO(id,name,address);
-                customerDAO.updateCustomer(customerDTO);
+                customerDAO.update(customerDTO);
                 if (!existCustomer(id)) {
                     new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + id).show();
                 }
@@ -227,7 +226,7 @@ public class ManageCustomersFormController {
         try {
             //new CustomerDAOimpl().deleteCustomer(new CustomerDTO(id));
             CustomerDTO customerDTO = new CustomerDTO(id);
-            customerDAO.deleteCustomer(customerDTO);
+            customerDAO.delete(customerDTO);
             if (!existCustomer(id)) {
                 new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + id).show();
             }
